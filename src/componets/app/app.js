@@ -6,17 +6,15 @@ import EmloyeesList from '../employees-list/employees-list'
 import EmployeesForm from '../employees-add-form/employees-add-form'
 
 import './app.css'
-
-
 class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
             data : [
-                { name: 'John', salary: 1000, increase: false, id:0 },
-                { name: 'Kety', salary: 300, increase: true, id:2 },
-                { name: 'Mery', salary: 500, increase: false, id:3  }
-            ]
+                { name: 'John', salary: 1000, increase: false, rise: true, id:1 },
+                { name: 'Kety', salary: 300, increase: true, rise: false, id:2 },
+                { name: 'Mery', salary: 500, increase: false, rise: false, id:3  }
+            ],
         }
         this.maxId = 4
     }
@@ -34,6 +32,7 @@ class App extends Component {
             name,
             salary,
             increase: false,
+            rise: false,
             id: this.maxId ++
         }
 
@@ -44,12 +43,54 @@ class App extends Component {
             }
         })
     }
+
+    onToggleIncrease = (id) => {
+        // this.setState(({ data }) => {
+        //     const index = data.findIndex(item => item.id === id)
+
+        //     const old = data[index];
+        //     const newItem = { ...old, increase: !old.increase }
+
+        //     const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)]
+
+        //     return {
+        //         data: newArr
+        //     }
+        // })
+        
+        this.setState(({ data }) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {...item, increase: !item.increase}
+                }
+                return item;
+            })
+        }))
+    }
+
+    onToggleRise = (id) => {
+        this.setState(({ data }) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {...item, rise: !item.rise}
+                }
+                return item;
+            })
+        }))
+    }
+
     render() {
+        const employees = this.state.data.length
+        const increased = this.state.data.filter(item => item.increase).length
         return (
             <div className="app">
-                <AppInfo />
+                <AppInfo employees={employees} increased={increased} />
                 <SearchPenal />  
-                <EmloyeesList data={this.state.data} onDelete={this.deleteItem} />
+                <EmloyeesList 
+                    data={this.state.data}
+                    onDelete={this.deleteItem}
+                    onToggleIncrease={this.onToggleIncrease}
+                    onToggleRise={this.onToggleRise} />
                 <EmployeesForm onAdd={this.addItem} />
             </div>
         )
