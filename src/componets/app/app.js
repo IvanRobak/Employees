@@ -4,6 +4,7 @@ import AppInfo from '../app-info/app-info'
 import SearchPenal from '../search-penal/search-penal'
 import EmloyeesList from '../employees-list/employees-list'
 import EmployeesForm from '../employees-add-form/employees-add-form'
+import AppFilter from '../app-filter/app-filter'
 
 import './app.css'
 class App extends Component {
@@ -15,8 +16,10 @@ class App extends Component {
                 { name: 'Kety', salary: 300, increase: true, rise: false, id:2 },
                 { name: 'Mery', salary: 500, increase: false, rise: false, id:3  }
             ],
-            term: ""
+            term: "",
+            filter: "all",
         }
+
         this.maxId = 4       
     }
 
@@ -81,21 +84,42 @@ class App extends Component {
         this.setState({term})
     }
 
+    filterPost = (items, filter) => {
+        switch (filter) {
+            case 'rise':
+                return items.filter(item => item.rise);
+            case 'moreThen1000':
+                return items.filter(item => item.salary > 1000 )
+            default:
+                return items
+        }
+    }
+
+    onFilterSelect = (filter) => {
+        this.setState({filter})
+    }
+
     render() {
-        const {data, term} = this.state
+        const {data, term, filter} = this.state
         const employees = this.state.data.length
         const increased = this.state.data.filter(item => item.increase).length
-        const visibleData = this.searchEmp(data,term)
+        const visibleData = this.filterPost(this.searchEmp(data,term), filter)
 
         return (
             <div className="app">
                 <AppInfo employees={employees} increased={increased} />
-                <SearchPenal onUpdateSearch={this.onUpdateSearch} />  
+
+                <div className="search-penal">
+                    <SearchPenal onUpdateSearch={this.onUpdateSearch} />  
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect} />
+                </div>
+                
                 <EmloyeesList 
                     data={visibleData}
                     onDelete={this.deleteItem}
                     onToggleIncrease={this.onToggleIncrease}
-                    onToggleRise={this.onToggleRise} />
+                    onToggleRise={this.onToggleRise}
+                />
                 <EmployeesForm onAdd={this.addItem} />
             </div>
         )
