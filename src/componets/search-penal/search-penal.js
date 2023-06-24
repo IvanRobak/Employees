@@ -2,12 +2,9 @@ import { Component } from "react"
 import "./search-penal.css"
 
 class SearchPenal extends Component{
-    constructor(props) {
-        super(props)
-        this.state = {
+        state = {
             term: ''
         }
-    }
 
     onUpdateSearch = (e) => {
         const term = e.target.value

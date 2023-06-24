@@ -8,9 +8,7 @@ import AppFilter from '../app-filter/app-filter'
 
 import './app.css'
 class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
+        state = {
             data : [
                 { name: 'John', salary: 1000, increase: false, rise: true, id:1 },
                 { name: 'Kety', salary: 300, increase: true, rise: false, id:2 },
@@ -20,8 +18,7 @@ class App extends Component {
             filter: "all",
         }
 
-        this.maxId = 4       
-    }
+        maxId = 4       
 
     deleteItem = (id) => {
         this.setState(({ data }) => {
